@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conversor de Bases</title>
+    <!-- estilo css -->
+    <style>
+      /* estilo para o corpo da página */
+      body {
+        font-family: Arial, sans-serif; /* define a fonte utilizada */
+        background-color: #63b1bc; /* define a cor de fundo do corpo da página */
+        background-repeat: no-repeat;
+        background-size: 100%;
+        margin: 0; /* remove margens externas */
+        padding: 0; /* remove preenchimento externo */
+      }
+
+      /* estilo para o contêiner principal */
+      #container {
+        width: 60%; /* define a largura do contêiner */
+        margin: 50px auto; /* centraliza o contêiner horizontalmente */
+        padding-inline: 5px;
+        padding-bottom: 3rem;
+        padding-top: 3rem;
+        text-align: center; /* alinha o conteúdo ao centro */
+        background-color: #faf9f6;
+        border-radius: 30px;
+        border: solid 2px black;
+      }
+      #divCalculadora {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+        font-weight: bold;
+        gap: 30px;
+        align-items: center;
+      }
+
+      /* estilo para o cabeçalho */
+      h1 {
+        color: #000000; /* define a cor do texto do cabeçalho */
+      }
+
+      /* estilo para a entrada de texto */
+      input[type="text"] {
+        padding: 6px; /* define o preenchimento interno */
+        font-size: 16px; /* define o tamanho da fonte */
+        border-radius: 5px; /* define o raio das bordas */
+        border: solid 1px;
+      }
+
+      /* estilo para seleção e botão */
+      select {
+        border-radius: 5px;
+        padding: 6px;
+      }
+      option {
+        background-color: rgb(231, 231, 231);
+      }
+
+      button {
+        padding: 8px; /* define o preenchimento interno */
+        font-size: 16px; /* define o tamanho da fonte */
+        border-radius: 5px; /* define o raio das bordas */
+        cursor: pointer; /* altera o cursor ao passar por cima */
+      }
+
+      /* estilo para o botão */
+      button {
+        background-color: #ed145b; /* define a cor de fundo do botão */
+        color: #ffffff; /* define a cor do texto do botão */
+        border: none; /* remove a borda do botão */
+        width: 40%;
+        margin-bottom: 10px;
+      }
+
+      /* estilo para o botão ao passar o mouse por cima */
+      button:hover {
+        background-color: #efb661; /* altera a cor de fundo ao passar o mouse */
+      }
+
+      /* estilo para a saída de resultados */
+      #output {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px; /* define a margem superior */
+        padding: 10px; /* define o preenchimento interno */
+        border-radius: 30px; /* define o raio das bordas */
+        background-color: #8fddf7; /* define a cor de fundo */
+        border: 2px solid #000000; /* define a borda */
+        text-align: left; /* alinha o texto à esquerda */
+        display: none; /* inicialmente oculta a saída */
+      }
+      h2 {
+        font-weight: bold;
+        font-size: x-large;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- contêiner principal -->
+    <div id="container">
+      <!-- título da página -->
+      <h1>Bit's Machine</h1>
+      <button onclick="showConversor()">Conversor</button>
+      <button onclick="showCalculadora()">Calculadora</button>
+      <div id="divConversor">
+        <!-- entrada de valor -->
+        <input id="inputValue" type="text" placeholder="Digite o valor" />
+        <!-- seleção da base -->
+        <select id="inputBase">
+          <option value="10">Decimal</option>
+          <option value="16">Hexadecimal</option>
+          <option value="8">Octal</option>
+          <option value="2">Binário</option>
+        </select>
+        <br /><br />
+
+        <!-- botão de conversão -->
+        <button onclick="converter()">Converter</button>
+        <!-- saída de resultados -->
+        <div id="output"></div>
+      </div>
+      <div id="divCalculadora">
+        <div>
+          1º valor:
+          <input
+            type="text"
+            id="iptPrimeiroValor"
+            placeholder="Informe o Primeiro Valor"
+          />
+          Base:
+          <select id="selBase1">
+            <option value="" disabled selected>Selecione ...</option>
+            <option value="10">Decimal</option>
+            <option value="16">Hexadecimal</option>
+            <option value="8">Octal</option>
+            <option value="2">Binário</option></select
+          ><br />
+        </div>
+        <div>
+          Selecione a operação:
+          <select id="selOperacao">
+            <option value="" disabled selected>Selecione ...</option>
+            <option value="adicao">Soma</option>
+            <option value="subtracao">Subtração</option>
+          </select>
+        </div>
+        <div>
+          2º valor:
+          <input
+            type="text"
+            id="iptSegundoValor"
+            placeholder="Informe o Segundo Valor"
+          />
+          Base:
+          <select id="selBase2">
+            <option value="" disabled selected>Selecione ...</option>
+            <option value="10">Decimal</option>
+            <option value="16">Hexadecimal</option>
+            <option value="8">Octal</option>
+            <option value="2">Binário</option></select
+          ><br />
+        </div>
+        <div>
+          Selecione a base da resposta:
+          <select id="selBaseResposta">
+            <option value="" disabled selected>Selecione ...</option>
+            <option value="10">Decimal</option>
+            <option value="16">Hexadecimal</option>
+            <option value="8">Octal</option>
+            <option value="2">Binário</option>
+          </select>
+        </div>
+        <button onclick="calcular()">Calcular</button>
+        <div id="divResult"></div>
+        <button onclick="limparResult()" id="limpaDiv">
+          Limpar Resultados
+        </button>
+      </div>
+    </div>
+    <!-- script javascript -->
+    <script>
+      limpaDiv.style.display = "none";
+      divConversor.style.display = "none";
+      divCalculadora.style.display = "none";
+      function showCalculadora() {
+        divConversor.style.display = "none";
+        divCalculadora.style.display = "flex";
+      }
+      function showConversor() {
+        divCalculadora.style.display = "none";
+        divConversor.style.display = "block";
+      }
+
+      function calcular() {
+        var primeiroValor = iptPrimeiroValor.value;
+        var segundoValor = iptSegundoValor.value;
+        var base1 = selBase1.value;
+        var base2 = selBase2.value;
+        var operacao = selOperacao.value;
+
+        var baseResultado = selBaseResposta.value;
+        if (!validarEntrada(primeiroValor, base1)) {
+          alert(
+            "Por favor, insira um número válido para a base selecionada do primeiro valor."
+          );
+          return;
+        } else if (!validarEntrada(segundoValor, base2)) {
+          alert(
+            "Por favor, insira um número válido para a base selecionada do segundo valor."
+          );
+          return;
+        } else {
+          // converte o valor para decimal, com base na base de entrada selecionada
+          var primeiroValor = parseInt(primeiroValor, base1);
+          var segundoValor = parseInt(segundoValor, base2);
+        }
+        if (selOperacao.value == "adicao") {
+          var resultado = Number(primeiroValor) + Number(segundoValor);
+        } else {
+          var resultado = Number(primeiroValor) - Number(segundoValor);
+        }
+        divResult.innerHTML += `<br> ${
+          iptPrimeiroValor.value
+        }<sup>${base1}</sup> ${selOperacao.value == "adicao" ? "+" : "-"} ${
+          iptSegundoValor.value
+        }<sup>${base1}</sup> = ${resultado.toString(
+          baseResultado
+        )}<sup>${baseResultado}</sup>`;
+        limpaDiv.style.display = "block";
+      }
+      function limparResult() {
+        divResult.innerHTML = "";
+        limpaDiv.style.display = "none";
+      }
+      // função para converter os valores
+      function converter() {
+        var inputValue = document.getElementById("inputValue").value; // obtém o valor de entrada
+        var inputBase = document.getElementById("inputBase").value; // obtém a base de entrada
+
+        // valida a entrada de acordo com a base selecionada
+        if (!validarEntrada(inputValue, inputBase)) {
+          alert("Por favor, insira um número válido para a base selecionada.");
+          return;
+        }
+
+        // converte o valor para decimal, com base na base de entrada selecionada
+        var decimalValue = parseInt(inputValue, inputBase);
+        var outputHTML = "<h2>Conversões:<br></h2>"; // inicializa a variável para armazenar o html de saída
+
+        if (inputBase == "10") {
+          output.style.display = "block"; // exibe a saída
+          outputHTML += `<p>Hexadecimal: ${decimalValue
+            .toString(16)
+            .toUpperCase()}</p>`; // converte para hexadecimal e adiciona ao html
+          outputHTML += `<p>Octal: ${decimalValue.toString(8)}</p>`; // converte para octal e adiciona ao html
+          outputHTML += `<p>Binário: ${decimalValue.toString(2)}</p>`; // converte
+        } else if (inputBase == "16") {
+          output.style.display = "block"; // exibe a saída
+          outputHTML += `<p>Decimal: ${decimalValue}</p>`; // adiciona o resultado ao html
+          outputHTML += `<p>Octal: ${decimalValue.toString(8)}</p>`; // converte para octal e adiciona ao html
+          outputHTML += `<p>Binário: ${decimalValue.toString(2)}</p>`; // converte
+        } else if (inputBase == "2") {
+          output.style.display = "block"; // exibe a saída
+          outputHTML += `<p>Decimal: ${decimalValue}</p>`; // adiciona o resultado ao html
+          outputHTML += `<p>Hexadecimal: ${decimalValue
+            .toString(16)
+            .toUpperCase()}</p>`; // converte para hexadecimal e adiciona ao html
+          outputHTML += `<p>Octal: ${decimalValue.toString(8)}</p>`; // converte para octal e adiciona ao html
+        } else {
+          output.style.display = "block"; // exibe a saída
+          outputHTML += `<p>Decimal: ${decimalValue}</p>`; // adiciona o resultado ao html
+          outputHTML += `<p>Hexadecimal: ${decimalValue
+            .toString(16)
+            .toUpperCase()}</p>`; // converte para hexadecimal e adiciona ao html
+          outputHTML += `<p>Binário: ${decimalValue.toString(2)}</p>`; // converte
+          console.log(inputBase);
+        }
+        document.getElementById("output").innerHTML = outputHTML; // atualiza o conteúdo da saída com o html gerado
+      }
+
+      // Função para validar a entrada de acordo com a base selecionada
+      function validarEntrada(inputValue, inputBase) {
+        inputBase = inputBase.toString();
+        var validChars = ""; // String para armazenar os caracteres válidos
+
+        // Determina os caracteres válidos com base na base selecionada
+        if (inputBase === "10") {
+          validChars = "0123456789"; // Para base decimal, são válidos os dígitos de 0 a 9
+        } else if (inputBase === "16") {
+          validChars = "0123456789ABCDEFabcdef"; // Para base hexadecimal, são válidos os dígitos de 0 a 9 e as letras de A a F
+        } else if (inputBase === "8") {
+          validChars = "01234567"; // Para base octal, são válidos os dígitos de 0 a 7
+        } else if (inputBase === "2") {
+          validChars = "01"; // Para base binária, são válidos os dígitos 0 e 1
+        }
+
+        // Verifica se cada caractere da entrada está presente na lista de caracteres válidos
+        for (var i = 0; i < inputValue.length; i++) {
+          if (validChars.indexOf(inputValue[i]) === -1) {
+            // Se o caractere não for encontrado na lista de caracteres válidos
+            return false; // Retorna falso indicando que a entrada é inválida
+          }
+        }
+        return true; // Retorna verdadeiro indicando que a entrada é válida
+      }
+    </script>
+  </body>
+</html>
